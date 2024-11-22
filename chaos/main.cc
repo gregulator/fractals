@@ -18,12 +18,13 @@ int main(void) {
   // c.v[2]*=2;
   // std::cout << (int)c.r << (int)c.g << (int)c.b << std::endl;
 
-  for (int j = 1; j < 8; j++) {
-    Image1d<bool> img(280);
-    DrawCantor1d(img, Cantor1dOptions{.max_iterations=j, .removal_ratio=1.0/6.0});
+  Image2d<bool> img2d(243, 10);
+  BarImageWriter<bool> img1d(img2d);
+  DrawCantor1d(img1d, Cantor1dOptions{.max_iterations=0});
 
-    for (int i = 0; i < img.width(); i++) {
-      std::cout << int(img.read(i));
+  for (int y = 0; y < img2d.height(); y++) {
+    for (int x = 0 ; x < img2d.width(); x++) {
+      std::cout << int(img2d.read(x, y));
     }
     std::cout << std::endl;
   }

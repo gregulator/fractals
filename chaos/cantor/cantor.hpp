@@ -21,7 +21,7 @@ void DrawCantor1d_Range(ImageT& dest, int iteration, double min_x, double max_x,
     }
     return;
   }
-  if (max_x - min_x < 2.5) {
+  if (max_x - min_x < 3) {
     dest.write(int((min_x+max_x)/2), 1);
   } else {
     double len = (1.0-options.removal_ratio)/2.0;
