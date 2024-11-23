@@ -7,10 +7,25 @@
 #include <concepts>
 #include <vector>
 
+namespace chaos {
+
 template <typename ImageT>
 concept Image1dWritable = requires(ImageT i, typename ImageT::pixel_type p) {
   i.write(0, p);
   {i.width()} -> std::convertible_to<int>;
+};
+
+template <typename ImageT>
+concept Image1dReadable = requires(ImageT i, typename ImageT::pixel_type p) {
+  p = i.read(0);
+  {i.width()} -> std::convertible_to<int>;
+};
+
+template <typename ImageT>
+concept Image2dReadable = requires(ImageT i, typename ImageT::pixel_type p) {
+  p = i.read(0, 0);
+  {i.width()} -> std::convertible_to<int>;
+  {i.height()} -> std::convertible_to<int>;
 };
 
 template <typename PixelT>
@@ -39,13 +54,13 @@ class Image2d {
     void write(int x, int y, pixel_type value) {
       data_[y*width_ + x] = value;
     }
-    pixel_type read(int x, int y) {
+    pixel_type read(int x, int y) const {
       return data_[y*width_ + x];
     }
-    int width() {
+    int width() const {
       return width_;
     }
-    int height() {
+    int height() const {
       return height_;
     }
   private:
@@ -81,5 +96,7 @@ struct Rgb8 {
     };
   };
 };
+
+} // namespace chaos
 
 #endif // __CHAOS_IMAGE_H__
