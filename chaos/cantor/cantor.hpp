@@ -3,6 +3,8 @@
 #ifndef __CHAOS_CANTOR_CANTOR_HPP__
 #define __CHAOS_CANTOR_CANTOR_HPP__
 
+#include "utils.hpp"
+
 #include <cstdint>
 #include <limits>
 
@@ -18,17 +20,15 @@ template <Image1dWritable ImageT>
 void DrawCantor1d_Range(ImageT& dest, int iteration, double min_x, double max_x, const Cantor1dOptions& options) {
   if (iteration >= options.max_iterations) {
     for (int i = int(min_x+0.5); i < int(max_x+0.5); i++) {
-      dest.write(i, 1);
+      SafeWrite(dest, i, 1);
     }
     return;
   }
   if (max_x - min_x <= 1) {
     int p = int((min_x+ max_x)/2);
-    // dest.write(int((min_x+max_x)/2), 1);
-    // dest.write(int((min_x+max_x)/2), 1);
-    dest.write(p-1, 1);
-    dest.write(p, 1);
-    dest.write(p+1, 1);
+    SafeWrite(dest, p-1, 1);
+    SafeWrite(dest, p, 1);
+    SafeWrite(dest, p+1, 1);
     return;
   } else {
     double len = (1.0-options.removal_ratio)/2.0;
