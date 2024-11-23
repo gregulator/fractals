@@ -48,7 +48,7 @@ class Image1d {
     pixel_type read(int x) {
       return data_[x];
     }
-    int width() {
+    int width() const {
       return data_.size();
     }
   private:
@@ -118,6 +118,23 @@ class BarImageWriter {
     }
   private:
     underlying_type* underlying_;
+};
+
+template <Image2dWritable UnderlyingImageT>
+class RowWriter1d {
+  public:
+    using underlying_type = UnderlyingImageT;
+    using pixel_type = typename underlying_type::pixel_type;
+    RowWriter1d(underlying_type& underlying, int y) : underlying_(&underlying), y_(y) {}
+    void write(int x, pixel_type value) {
+        underlying_->write(x, y_, value);
+    }
+    int width() const {
+      return underlying_->width();
+    }
+  private:
+    underlying_type* underlying_;
+    int y_;
 };
 
 struct Rgb8 {
