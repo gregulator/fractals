@@ -12,7 +12,8 @@ namespace chaos {
 
 struct Cantor1dOptions {
   int max_iterations = INT_MAX;
-  double removal_ratio = (1.0/3.0);
+  double removal_start_ratio = (1.0/3.0);
+  double removal_end_ratio = (2.0/3.0);
 };
 
 namespace internal {
@@ -31,9 +32,8 @@ void DrawCantor1d_Range(ImageT& dest, int iteration, double min_x, double max_x,
     SafeWrite(dest, p+1, 1);
     return;
   } else {
-    double len = (1.0-options.removal_ratio)/2.0;
-    DrawCantor1d_Range(dest, iteration+1, min_x, min_x + (max_x - min_x)*len, options);
-    DrawCantor1d_Range(dest, iteration+1, max_x - (max_x - min_x)*len, max_x, options);
+    DrawCantor1d_Range(dest, iteration+1, min_x, min_x + (max_x - min_x)*options.removal_start_ratio, options);
+    DrawCantor1d_Range(dest, iteration+1, min_x + (max_x-min_x)*options.removal_end_ratio, max_x, options);
   }
 }
 }  // namespace internal
