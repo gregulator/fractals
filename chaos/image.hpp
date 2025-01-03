@@ -8,6 +8,7 @@
 #include <cstdint>
 #include <concepts>
 #include <vector>
+#include <iostream>
 
 namespace chaos {
 
@@ -24,6 +25,9 @@ concept Image1dReadable = requires(ImageT i, typename ImageT::pixel_type p) {
 };
 
 template <typename ImageT>
+concept Image1dReadWritable = Image1dReadable<ImageT> && Image1dWritable<ImageT>;
+
+template <typename ImageT>
 concept Image2dReadable = requires(ImageT i, typename ImageT::pixel_type p) {
   p = i.read(0, 0);
   {i.width()} -> std::convertible_to<int>;
@@ -37,6 +41,9 @@ concept Image2dWritable = requires(ImageT i, typename ImageT::pixel_type p) {
   {i.height()} -> std::convertible_to<int>;
 };
 
+template <typename ImageT>
+concept Image2dReadWritable = Image2dReadable<ImageT> && Image2dWritable<ImageT>;
+
 template <typename PixelT>
 class Image1d {
   public:
@@ -45,7 +52,7 @@ class Image1d {
     void write(int x, pixel_type value) {
       data_[x] = value;
     }
-    pixel_type read(int x) {
+    pixel_type read(int x) const {
       return data_[x];
     }
     int width() const {
@@ -135,6 +142,28 @@ class RowWriter1d {
   private:
     underlying_type* underlying_;
     int y_;
+};
+
+template <Image1dReadWritable UnderlyingImageT>
+class AdditiveWriter1d {
+  public:
+    using underlying_type = UnderlyingImageT;
+    using pixel_type = typename underlying_type::pixel_type;
+    AdditiveWriter1d(underlying_type& underlying, int amount) : underlying_(&underlying), amount_(amount) {}
+    pixel_type read(int x) const {
+        return underlying_->read(x);
+    }
+    void write(int x, pixel_type value) {
+        pixel_type p = underlying_->read(x);
+        underlying_->write(x, p+amount_);
+        std::cout << "writing " << (int)p+amount_ << std::endl;
+    }
+    int width() const {
+      return underlying_->width();
+    }
+  private:
+    underlying_type* underlying_;
+    int amount_;
 };
 
 struct Rgb8 {
