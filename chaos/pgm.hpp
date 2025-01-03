@@ -10,6 +10,21 @@
 namespace chaos {
 
 template <Image2dReadable ImageT>
+void WriteBlackWhitePgm(const ImageT& image, const std::string& filename) {
+  std::ofstream outfile;
+  outfile.open(filename);
+  outfile << "P2" << std::endl;
+  outfile << int(image.width()) << " " << int(image.height()) << std::endl;
+  outfile << "1" << std::endl;
+  for (int y = 0; y < image.height(); y++) {
+    for (int x = 0; x < image.width(); x++) {
+      outfile << (int)image.read(x, y) << " ";
+    }
+      outfile << std::endl;
+  }
+}
+
+template <Image2dReadable ImageT>
 void WritePgm(const ImageT& image, const std::string& filename) {
   std::ofstream outfile;
   outfile.open(filename);
