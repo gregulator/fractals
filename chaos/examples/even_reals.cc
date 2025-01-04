@@ -22,7 +22,8 @@ int main(void) {
     ImageWriteView2d view(img2d, Range2d::FromOffsetAndSize(
       (14400-13122)/2, inches_to_pixels(1+1.5*i), 13122, inches_to_pixels(1)));
     BarImageWriter img1d(view);
-    DrawMultiGapCantor1d(img1d, MultiGapCantor1dOptions{
+    LineWriter1d writer(img1d);
+    DrawMultiGapCantor1d(writer, MultiGapCantor1dOptions{
         .max_iterations=i,
         .segments = {
             Range<double>(0.0, 0.1), 

@@ -5,6 +5,7 @@
 
 #include "fill.hpp"
 #include "rand.hpp"
+#include "line.hpp"
 #include "point.hpp"
 #include "utils.hpp"
 
@@ -58,36 +59,25 @@ struct MultiGapCantor1dOptions {
 };
 
 namespace internal {
-template <Image1dWritable ImageT> 
-void DrawMultiGapCantor1d_Range(ImageT& dest, int iteration, double min_x, double max_x, const MultiGapCantor1dOptions& options) {
-  if (iteration >= options.max_iterations) {
-    for (int i = int(min_x+0.5); i < int(max_x+0.5); i++) {
-      SafeWrite(dest, i, 1);
-    }
+template <Line1dDrawable DrawT> 
+void DrawMultiGapCantor1d_Range(DrawT& dest, int iteration, Line1d line, const MultiGapCantor1dOptions& options) {
+  if ((iteration >= options.max_iterations) || (line.width() < 1.0)) {
+    dest.DrawLine(line, 1);
     return;
   }
-  if (max_x - min_x <= 1) {
-    int p = int((min_x+ max_x)/2);
-    SafeWrite(dest, p-1, 1);
-    SafeWrite(dest, p, 1);
-    SafeWrite(dest, p+1, 1);
-    return;
-  } else {
-    for (auto& segment : options.segments) {
-      DrawMultiGapCantor1d_Range(
-          dest,
-          iteration+1,
-          Lerp(min_x, max_x, segment.x0),
-          Lerp(min_x, max_x, segment.x1),
-          options);
-    }
+  for (auto& segment : options.segments) {
+    DrawMultiGapCantor1d_Range(
+        dest,
+        iteration+1,
+        Line1d(Lerp(line.x0, line.x1, segment.x0), Lerp(line.x0, line.x1, segment.x1)),
+        options);
   }
 }
 }  // namespace internal
 
-template <Image1dWritable ImageT> 
-void DrawMultiGapCantor1d(ImageT& dest, const MultiGapCantor1dOptions& options) {
-  internal::DrawMultiGapCantor1d_Range(dest, 0, 0, dest.width()-1, options);
+template <Line1dDrawable DrawT> 
+void DrawMultiGapCantor1d(DrawT& dest, const MultiGapCantor1dOptions& options) {
+  internal::DrawMultiGapCantor1d_Range(dest, 0, Line1d(dest.width()-1), options);
 }
 
 // -----------------------------------------------------------------------------
