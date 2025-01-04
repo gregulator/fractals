@@ -109,6 +109,23 @@ class ImageWriteView2d {
     Range2d subrange_;
 };
 
+template <Image2dWritable UnderlyingImageT, typename PixelT>
+class PlotImageWriter {
+  public:
+    using underlying_type = UnderlyingImageT;
+    using pixel_type = PixelT;
+    PlotImageWriter(underlying_type& underlying, typename underlying_type::pixel_type value) : underlying_(&underlying) , value_(value) {}
+    void write(int x, pixel_type value) {
+      SafeWrite(*underlying_, x, int(value), value_);
+    }
+    int width() {
+      return underlying_->width();
+    }
+  private:
+    underlying_type* underlying_;
+    typename underlying_type::pixel_type value_;
+};
+
 template <Image2dWritable UnderlyingImageT>
 class BarImageWriter {
   public:
@@ -125,6 +142,7 @@ class BarImageWriter {
     }
   private:
     underlying_type* underlying_;
+    pixel_type value_;
 };
 
 template <Image2dWritable UnderlyingImageT>

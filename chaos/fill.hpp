@@ -10,6 +10,22 @@
 
 namespace chaos {
 
+template <Image1dWritable ImageT>
+void Fill(ImageT& image, typename ImageT::pixel_type p) {
+  for (int x = 0; x < image.width(); x++) {
+    image.write(x, p);
+  }
+}
+
+template <Image1dWritable ImageT>
+void Fill(ImageT& image, int x0, int x1, typename ImageT::pixel_type p) {
+  int x0_ = std::max(0, x0);
+  int x1_ = std::min(image.width(), x1);
+  for (int x = x0_; x < x1_; x++) {
+    image.write(x, p);
+  }
+}
+
 template <Image2dWritable ImageT>
 void Fill(ImageT& image, typename ImageT::pixel_type p) {
   for (int y = 0; y < image.height(); y++) {
