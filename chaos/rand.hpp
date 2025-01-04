@@ -11,6 +11,7 @@ template <typename ValueT>
 class Random {
   public:
     Random() : device_(), gen_(device_()), dist_(0, 1) {}
+    explicit Random(unsigned int seed) : gen_(seed), dist_(0, 1) {}
     double ZeroToOne() {
       return dist_(gen_);
     }

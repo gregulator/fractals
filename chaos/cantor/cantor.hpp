@@ -110,7 +110,7 @@ void DrawDevilsStaircase1d(ImageT& dest, const DevilsStaircase1dOptions& options
 // -----------------------------------------------------------------------------
 struct Cantor2dOptions {
   int max_iterations = INT_MAX;
-  // TODO: set seed
+  unsigned int seed = 0;
   std::optional<double> probability = std::nullopt;
 };
 
@@ -151,7 +151,7 @@ void DrawCantor2d_Range(ImageT& dest, Random<double>& random, int iteration, Poi
 
 template <Image2dWritable ImageT> 
 void DrawCantor2d(ImageT& dest, const Cantor2dOptions& options) {
-  Random<double> random;
+  Random<double> random(options.seed);
   internal::DrawCantor2d_Range(dest, random, 0, Point2(0, 0), Point2(dest.width(), dest.height()), options);
 }
 
