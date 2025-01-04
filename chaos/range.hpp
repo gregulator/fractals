@@ -5,6 +5,15 @@
 
 namespace chaos {
 
+template <typename ValueT>
+struct Range {
+  Range(ValueT x0_, ValueT x1_) : x0(x0_), x1(x1_) {}
+  explicit Range(ValueT x1_) : x0(0), x1(x1_) {}
+  ValueT x0;
+  ValueT x1;
+  ValueT width() const {return x1 - x0;}
+};
+
 struct Range2d {
   Range2d(int x0_, int y0_, int x1_, int y1_) : x0(x0_), y0(y0_), x1(x1_), y1(y1_) {}
   Range2d(int x1_, int y1_) : x0(0), y0(0), x1(x1_), y1(y1_) {}

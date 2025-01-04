@@ -9,6 +9,11 @@
 
 namespace chaos {
 
+template <typename ValueT>
+ValueT Lerp(ValueT a, ValueT b, double t) {
+  return ValueT(a + (b - a)*t);
+}
+
 template <Image1dWritable ImageT>
 void SafeWrite(ImageT& image, int x, typename ImageT::pixel_type p) {
   if (x < 0 || x >= image.width()) {
