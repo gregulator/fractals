@@ -116,7 +116,9 @@ class PlotImageWriter {
     using pixel_type = PixelT;
     PlotImageWriter(underlying_type& underlying, typename underlying_type::pixel_type value) : underlying_(&underlying) , value_(value) {}
     void write(int x, pixel_type value) {
-      SafeWrite(*underlying_, x, int(value), value_);
+      for (int y = 0; y < int(value); y++) {
+        SafeWrite(*underlying_, x, y, value_);
+      }
     }
     int width() {
       return underlying_->width();
