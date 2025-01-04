@@ -112,6 +112,7 @@ struct Cantor2dOptions {
   int max_iterations = INT_MAX;
   unsigned int seed = 0;
   std::optional<double> probability = std::nullopt;
+  bool draw_all_iterations = false;
 };
 
 namespace internal {
@@ -134,12 +135,19 @@ void DrawCantor2d_Range(ImageT& dest, Random<double>& random, int iteration, Poi
           draw = random.ZeroToOne() < *options.probability;
         }
         if (draw) {
+          double x0 = min.x + i*(max.x - min.x)/3;
+          double y0 = min.y + j*(max.y - min.y)/3;
+          double x1 = min.x + (i+1)*(max.x - min.x)/3;
+          double y1 = min.y + (j+1)*(max.y - min.y)/3;
+          if (options.draw_all_iterations) {
+            Fill(dest, Range2d(int(x0), int(y0), int(x1), int(y1)), 1);
+          }
           DrawCantor2d_Range(
             dest,
             random,
             iteration+1,
-            Point2(min.x + i*(max.x - min.x)/3, min.y + j*(max.y - min.y)/3),
-            Point2(min.x + (i+1)*(max.x - min.x)/3, min.y + (j+1)*(max.y - min.y)/3),
+            Point2(x0, y0),
+            Point2(x1, y1),
             options);
         }
       }

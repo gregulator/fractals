@@ -186,6 +186,30 @@ class AdditiveWriter1d {
     int amount_;
 };
 
+template <Image2dReadWritable UnderlyingImageT>
+class AdditiveWriter2d {
+  public:
+    using underlying_type = UnderlyingImageT;
+    using pixel_type = typename underlying_type::pixel_type;
+    AdditiveWriter2d(underlying_type& underlying, int amount) : underlying_(&underlying), amount_(amount) {}
+    pixel_type read(int x) const {
+        return underlying_->read(x);
+    }
+    void write(int x, int y, pixel_type value) {
+        pixel_type p = underlying_->read(x, y);
+        underlying_->write(x, y, p+amount_);
+    }
+    int width() const {
+      return underlying_->width();
+    }
+    int height() const {
+      return underlying_->height();
+    }
+  private:
+    underlying_type* underlying_;
+    int amount_;
+};
+
 struct Rgb8 {
   union {
     uint8_t v[3];
