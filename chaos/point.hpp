@@ -11,6 +11,12 @@ struct Point2 {
   double y;
 };
 
+inline double Dist(Point2 a, Point2 b) {
+  double delta_x = b.x - a.x;
+  double delta_y = b.y - a.y;
+  return sqrt(delta_x*delta_x + delta_y*delta_y);
+}
+
 } // namespace chaos
 
 #endif // __CHAOS_POINT_HPP__
